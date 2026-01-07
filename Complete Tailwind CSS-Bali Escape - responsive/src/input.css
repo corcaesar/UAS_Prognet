@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,300..900;1,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  /* Original input.css fonts */
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-ancizar: "Ancizar Serif", serif;
+
+  /* Restored config fonts */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+
+  /* Restored config colors */
+  --color-background: hsl(48 15% 97%);
+  --color-foreground: hsl(200 20% 25%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(200 20% 25%);
+  --color-primary: hsl(75 20% 48%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-muted: hsl(48 15% 92%);
+  --color-muted-foreground: hsl(0 2% 55%);
+  --color-border: hsl(45 15% 88%);
+  --color-input: hsl(45 15% 88%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+}
+
+/* Default border color fix - Top level to ensure override */
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  border-color: var(--color-border, currentColor);
+}

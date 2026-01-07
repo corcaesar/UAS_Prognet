@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Baliescape</title>
+    <link href="output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-background font-sans text-foreground">
+    <div x-data="dashboardData()">
+        <!-- Sidebar -->
+        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-border hidden md:flex flex-col">
+            <div class="h-20 flex items-center px-8 border-b border-border">
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <span class="text-xl font-serif font-semibold">Baliescape</span>
+                </a>
+            </div>
+            <nav class="flex-1 p-4 space-y-1">
+                <button @click="activeTab = 'destinations'"
+                    :class="{'bg-primary/10 text-primary': activeTab === 'destinations', 'text-muted-foreground hover:bg-gray-50 hover:text-foreground': activeTab !== 'destinations'}"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors">
+                    Destinations
+                </button>
+                <button @click="activeTab = 'messages'"
+                    :class="{'bg-primary/10 text-primary': activeTab === 'messages', 'text-muted-foreground hover:bg-gray-50 hover:text-foreground': activeTab !== 'messages'}"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors">
+                    Messages
+                </button>
+                <button @click="activeTab = 'accommodations'"
+                    :class="{'bg-primary/10 text-primary': activeTab === 'accommodations', 'text-muted-foreground hover:bg-gray-50 hover:text-foreground': activeTab !== 'accommodations'}"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors">
+                    Accommodations
+                </button>
+                <button @click="activeTab = 'vehicles'"
+                    :class="{'bg-primary/10 text-primary': activeTab === 'vehicles', 'text-muted-foreground hover:bg-gray-50 hover:text-foreground': activeTab !== 'vehicles'}"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors">
+                    Vehicles
+                </button>
+                <button @click="activeTab = 'guides'"
+                    :class="{'bg-primary/10 text-primary': activeTab === 'guides', 'text-muted-foreground hover:bg-gray-50 hover:text-foreground': activeTab !== 'guides'}"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md transition-colors">
+                    Guides
+                </button>
+            </nav>
+            <div class="p-4 border-t border-border">
+                <div class="flex items-center gap-3 px-4 py-3">
+                    <div
+                        class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                        <span x-text="user ? user.username.charAt(0).toUpperCase() : 'A'"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-foreground truncate" x-text="user ? user.username : 'Admin'">
+                        </p>
+                        <p class="text-xs text-muted-foreground truncate">Administrator</p>
+                    </div>
+                    <button @click="logout" class="text-muted-foreground hover:text-destructive transition-colors"
+                        title="Logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" x2="9" y1="12" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Header -->
+        <header
+            class="md:hidden bg-white border-b border-border h-16 flex items-center justify-between px-4 sticky top-0 z-40">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="text-lg font-serif font-semibold">Baliescape</span>
+            </a>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 text-muted-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" x2="21" y1="6" y2="6" />
+                    <line x1="3" x2="21" y1="12" y2="12" />
+                    <line x1="3" x2="21" y1="18" y2="18" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-cloak class="md:hidden fixed inset-0 z-50 bg-background" x-transition>
+            <div class="p-4 flex justify-end">
+                <button @click="mobileMenuOpen = false" class="p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" x2="6" y1="6" y2="18" />
+                        <line x1="6" x2="18" y1="6" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <nav class="px-4 space-y-2">
+                <button @click="activeTab = 'destinations'; mobileMenuOpen = false"
+                    class="w-full text-left px-4 py-3 text-lg font-medium border-b border-border">Destinations</button>
+                <button @click="activeTab = 'messages'; mobileMenuOpen = false"
+                    class="w-full text-left px-4 py-3 text-lg font-medium border-b border-border">Messages</button>
+                <button @click="activeTab = 'accommodations'; mobileMenuOpen = false"
+                    class="w-full text-left px-4 py-3 text-lg font-medium border-b border-border">Accommodations</button>
+                <button @click="activeTab = 'vehicles'; mobileMenuOpen = false"
+                    class="w-full text-left px-4 py-3 text-lg font-medium border-b border-border">Vehicles</button>
+                <button @click="activeTab = 'guides'; mobileMenuOpen = false"
+                    class="w-full text-left px-4 py-3 text-lg font-medium border-b border-border">Guides</button>
+                <button @click="logout"
+                    class="w-full text-left px-4 py-3 text-lg font-medium text-destructive">Logout</button>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <main class="md:ml-64 p-8">
+            <!-- Destinations Tab -->
+            <div x-show="activeTab === 'destinations'" x-transition.opacity>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 class="text-3xl font-serif font-bold text-foreground">Destinations</h1>
+                        <p class="text-muted-foreground mt-1">Manage your travel gems and locations.</p>
+                    </div>
+                    <button @click="showAddModal = true"
+                        class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19" />
+                            <line x1="5" x2="19" y1="12" y2="12" />
+                        </svg>
+                        Add Destination
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-show="destinations.length > 0">
+                    <template x-for="dest in destinations" :key="dest.id">
+                        <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden flex flex-col">
+                            <div class="relative aspect-video bg-muted">
+                                <img :src="dest.imageUrl || 'https://placehold.co/600x400?text=No+Image'"
+                                    :alt="dest.title" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                                        :class="{'bg-yellow-100 text-yellow-800': dest.status === 'pending', 'bg-green-100 text-green-800': dest.status === 'approved', 'bg-red-100 text-red-800': dest.status === 'rejected'}"
+                                        x-text="dest.status.charAt(0).toUpperCase() + dest.status.slice(1)"></span>
+                                </div>
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-serif font-semibold text-lg text-foreground line-clamp-1"
+                                    x-text="dest.title"></h3>
+                                <p class="text-sm text-muted-foreground mt-2 line-clamp-2" x-text="dest.description">
+                                </p>
+                                <div class="mt-auto pt-4 flex gap-2">
+                                    <template x-if="dest.status === 'pending'">
+                                        <div class="flex-1 flex gap-2">
+                                            <button @click="updateStatus(dest.id, 'approved')"
+                                                class="flex-1 px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">Approve</button>
+                                            <button @click="updateStatus(dest.id, 'rejected')"
+                                                class="flex-1 px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">Reject</button>
+                                        </div>
+                                    </template>
+                                    <button @click="openEditModal(dest)"
+                                        class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Edit</button>
+                                    <button @click="deleteDestination(dest.id)"
+                                        class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="destinations.length === 0"
+                    class="text-center py-12 bg-white rounded-lg border border-border border-dashed">
+                    <h3 class="text-lg font-medium text-foreground">No destinations yet</h3>
+                    <button @click="showAddModal = true" class="mt-4 text-primary font-medium hover:underline">Add
+                        Destination</button>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div x-show="activeTab === 'messages'" x-cloak x-transition.opacity>
+                <div class="mb-8">
+                    <h1 class="text-3xl font-serif font-bold text-foreground">Messages</h1>
+                    <p class="text-muted-foreground mt-1">View inquiries and feedback from users.</p>
+                </div>
+                <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-muted/50 border-b border-border">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium text-foreground">Name</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Email</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Subject</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Message</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="msg in messages" :key="msg.id">
+                                    <tr class="border-b border-border hover:bg-gray-50">
+                                        <td class="px-4 py-3" x-text="msg.name"></td>
+                                        <td class="px-4 py-3" x-text="msg.email"></td>
+                                        <td class="px-4 py-3" x-text="msg.subject || '-'"></td>
+                                        <td class="px-4 py-3 max-w-xs truncate" x-text="msg.message"></td>
+                                        <td class="px-4 py-3 text-xs text-muted-foreground"
+                                            x-text="new Date(msg.createdAt).toLocaleDateString()"></td>
+                                    </tr>
+                                </template>
+                                <template x-if="messages.length === 0">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">No messages
+                                            yet</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Accommodations Tab -->
+            <div x-show="activeTab === 'accommodations'" x-cloak x-transition.opacity>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 class="text-3xl font-serif font-bold text-foreground">Accommodations</h1>
+                        <p class="text-muted-foreground mt-1">Manage hotels, villas, and stays.</p>
+                    </div>
+                    <button @click="showAddAccModal = true"
+                        class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19" />
+                            <line x1="5" x2="19" y1="12" y2="12" />
+                        </svg>
+                        Add Accommodation
+                    </button>
+                </div>
+                <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-muted/50 border-b border-border">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium text-foreground">Name</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Type</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Area</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Price Range</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="acc in accommodations" :key="acc.id">
+                                    <tr class="border-b border-border hover:bg-gray-50">
+                                        <td class="px-4 py-3 font-medium" x-text="acc.name"></td>
+                                        <td class="px-4 py-3" x-text="acc.type"></td>
+                                        <td class="px-4 py-3" x-text="acc.area"></td>
+                                        <td class="px-4 py-3" x-text="acc.priceRange"></td>
+                                        <td class="px-4 py-3 flex gap-2">
+                                            <button @click="openEditAccModal(acc)"
+                                                class="text-blue-600 hover:underline">Edit</button>
+                                            <button @click="deleteAccommodation(acc.id)"
+                                                class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template x-if="accommodations.length === 0">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">No
+                                            accommodations found.</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicles Tab -->
+            <div x-show="activeTab === 'vehicles'" x-cloak x-transition.opacity>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 class="text-3xl font-serif font-bold text-foreground">Vehicles</h1>
+                        <p class="text-muted-foreground mt-1">Manage rental vehicles and transport.</p>
+                    </div>
+                    <button @click="showAddVehicleModal = true"
+                        class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19" />
+                            <line x1="5" x2="19" y1="12" y2="12" />
+                        </svg>
+                        Add Vehicle
+                    </button>
+                </div>
+                <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-muted/50 border-b border-border">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium text-foreground">Name</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Type</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Area</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Price</th>
+                                    <th class="px-4 py-3 font-medium text-foreground">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="vehicle in vehicles" :key="vehicle.id">
+                                    <tr class="border-b border-border hover:bg-gray-50">
+                                        <td class="px-4 py-3 font-medium" x-text="vehicle.name"></td>
+                                        <td class="px-4 py-3" x-text="vehicle.type"></td>
+                                        <td class="px-4 py-3" x-text="vehicle.area"></td>
+                                        <td class="px-4 py-3" x-text="vehicle.price"></td>
+                                        <td class="px-4 py-3 flex gap-2">
+                                            <button @click="openEditVehicleModal(vehicle)"
+                                                class="text-blue-600 hover:underline">Edit</button>
+                                            <button @click="deleteVehicle(vehicle.id)"
+                                                class="text-red-600 hover:underline">Delete</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template x-if="vehicles.length === 0">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">No vehicles
+                                            found.</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guides Tab -->
+            <div x-show="activeTab === 'guides'" x-cloak x-transition.opacity>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 class="text-3xl font-serif font-bold text-foreground">Guides</h1>
+                        <p class="text-muted-foreground mt-1">Manage travel guides and articles.</p>
+                    </div>
+                    <button @click="showAddGuideModal = true"
+                        class="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19" />
+                            <line x1="5" x2="19" y1="12" y2="12" />
+                        </svg>
+                        Add Guide
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="guide in guides" :key="guide.id">
+                        <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden flex flex-col">
+                            <div class="relative aspect-video bg-muted">
+                                <img :src="guide.imageUrl || 'https://placehold.co/600x400?text=No+Image'"
+                                    :alt="guide.title" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-serif font-semibold text-lg text-foreground line-clamp-1"
+                                    x-text="guide.title"></h3>
+                                <p class="text-sm text-muted-foreground mt-2 line-clamp-2" x-text="guide.excerpt"></p>
+                                <div class="mt-auto pt-4 flex gap-2">
+                                    <button @click="openEditGuideModal(guide)"
+                                        class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Edit</button>
+                                    <button @click="deleteGuide(guide.id)"
+                                        class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="guides.length === 0"
+                    class="text-center py-12 bg-white rounded-lg border border-border border-dashed">
+                    <p class="text-muted-foreground">No guides found.</p>
+                </div>
+            </div>
+        </main>
+
+        <!--  Add Destination Modal -->
+        <div x-show="showAddModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showAddModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Add New Destination</h2>
+                    <form @submit.prevent="addDestination" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Title *</label>
+                            <input type="text" x-model="newDest.title" required
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description *</label>
+                            <textarea x-model="newDest.description" required rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <select x-model="newDest.category"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Beach">Beach</option>
+                                    <option value="Temple">Temple</option>
+                                    <option value="Restaurant">Restaurant</option>
+                                    <option value="Cafe">Cafe</option>
+                                    <option value="Nature">Nature</option>
+                                    <option value="Adventure">Adventure</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area</label>
+                                <select x-model="newDest.area" class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Seminyak">Seminyak</option>
+                                    <option value="Canggu">Canggu</option>
+                                    <option value="Ubud">Ubud</option>
+                                    <option value="Uluwatu">Uluwatu</option>
+                                    <option value="Nusa Dua">Nusa Dua</option>
+                                    <option value="Sanur">Sanur</option>
+                                    <option value="Denpasar">Denpasar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Image</label>
+                            <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showAddModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Add
+                                Destination</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Destination Modal -->
+        <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showEditModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Edit Destination</h2>
+                    <form @submit.prevent="saveEdit" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Title *</label>
+                            <input type="text" x-model="editDest.title" required
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description *</label>
+                            <textarea x-model="editDest.description" required rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <select x-model="editDest.category"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Beach">Beach</option>
+                                    <option value="Temple">Temple</option>
+                                    <option value="Restaurant">Restaurant</option>
+                                    <option value="Cafe">Cafe</option>
+                                    <option value="Nature">Nature</option>
+                                    <option value="Adventure">Adventure</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area</label>
+                                <select x-model="editDest.area" class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Seminyak">Seminyak</option>
+                                    <option value="Canggu">Canggu</option>
+                                    <option value="Ubud">Ubud</option>
+                                    <option value="Uluwatu">Uluwatu</option>
+                                    <option value="Nusa Dua">Nusa Dua</option>
+                                    <option value="Sanur">Sanur</option>
+                                    <option value="Denpasar">Denpasar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Update Image (Optional)</label>
+                            <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showEditModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Save
+                                Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Accommodation Modal -->
+        <div x-show="showAddAccModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showAddAccModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Add Accommodation</h2>
+                    <form @submit.prevent="addAccommodation" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Name *</label>
+                                <input type="text" x-model="newAcc.name" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Type *</label>
+                                <select x-model="newAcc.type" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Hotel">Hotel</option>
+                                    <option value="Villa">Villa</option>
+                                    <option value="Resort">Resort</option>
+                                    <option value="Guesthouse">Guesthouse</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area *</label>
+                                <input type="text" x-model="newAcc.area" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Price Range</label>
+                                <input type="text" x-model="newAcc.priceRange" placeholder="e.g. $50 - $100"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea x-model="newAcc.description" rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Booking URL</label>
+                            <input type="text" x-model="newAcc.bookingUrl"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showAddAccModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Accommodation Modal -->
+        <div x-show="showEditAccModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showEditAccModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Edit Accommodation</h2>
+                    <form @submit.prevent="saveEditAccommodation" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Name *</label>
+                                <input type="text" x-model="editAcc.name" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Type *</label>
+                                <select x-model="editAcc.type" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Hotel">Hotel</option>
+                                    <option value="Villa">Villa</option>
+                                    <option value="Resort">Resort</option>
+                                    <option value="Guesthouse">Guesthouse</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area *</label>
+                                <input type="text" x-model="editAcc.area" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Price Range</label>
+                                <input type="text" x-model="editAcc.priceRange"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea x-model="editAcc.description" rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Booking URL</label>
+                            <input type="text" x-model="editAcc.bookingUrl"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showEditAccModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Vehicle Modal -->
+        <div x-show="showAddVehicleModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showAddVehicleModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Add Vehicle</h2>
+                    <form @submit.prevent="addVehicle" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Name *</label>
+                                <input type="text" x-model="newVehicle.name" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Type *</label>
+                                <select x-model="newVehicle.type" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Car">Car</option>
+                                    <option value="Motorbike">Motorbike</option>
+                                    <option value="Bicycle">Bicycle</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area</label>
+                                <input type="text" x-model="newVehicle.area"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Price</label>
+                                <input type="text" x-model="newVehicle.price"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea x-model="newVehicle.description" rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Contact</label>
+                                <input type="text" x-model="newVehicle.contact"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">WhatsApp</label>
+                                <input type="text" x-model="newVehicle.whatsapp"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showAddVehicleModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Vehicle Modal -->
+        <div x-show="showEditVehicleModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showEditVehicleModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Edit Vehicle</h2>
+                    <form @submit.prevent="saveEditVehicle" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Name *</label>
+                                <input type="text" x-model="editVehicle.name" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Type *</label>
+                                <select x-model="editVehicle.type" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                                    <option value="">Select...</option>
+                                    <option value="Car">Car</option>
+                                    <option value="Motorbike">Motorbike</option>
+                                    <option value="Bicycle">Bicycle</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area</label>
+                                <input type="text" x-model="editVehicle.area"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Price</label>
+                                <input type="text" x-model="editVehicle.price"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea x-model="editVehicle.description" rows="3"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Contact</label>
+                                <input type="text" x-model="editVehicle.contact"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">WhatsApp</label>
+                                <input type="text" x-model="editVehicle.whatsapp"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showEditVehicleModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Guide Modal -->
+        <div x-show="showAddGuideModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showAddGuideModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Add Guide</h2>
+                    <form @submit.prevent="addGuide" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Title *</label>
+                            <input type="text" x-model="newGuide.title" required
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Slug *</label>
+                                <input type="text" x-model="newGuide.slug" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <input type="text" x-model="newGuide.category"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Excerpt</label>
+                            <textarea x-model="newGuide.excerpt" rows="2"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Content</label>
+                            <textarea x-model="newGuide.content" rows="5"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Read Time</label>
+                            <input type="text" x-model="newGuide.readTime" placeholder="e.g. 5 min read"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Image</label>
+                            <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showAddGuideModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Guide Modal -->
+        <div x-show="showEditGuideModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" x-transition>
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="fixed inset-0 bg-black bg-opacity-30" @click="showEditGuideModal = false"></div>
+                <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h2 class="text-2xl font-serif font-bold mb-4">Edit Guide</h2>
+                    <form @submit.prevent="saveEditGuide" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Title *</label>
+                            <input type="text" x-model="editGuide.title" required
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Slug *</label>
+                                <input type="text" x-model="editGuide.slug" required
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <input type="text" x-model="editGuide.category"
+                                    class="w-full px-3 py-2 border border-input rounded-md">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Excerpt</label>
+                            <textarea x-model="editGuide.excerpt" rows="2"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Content</label>
+                            <textarea x-model="editGuide.content" rows="5"
+                                class="w-full px-3 py-2 border border-input rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Read Time</label>
+                            <input type="text" x-model="editGuide.readTime"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Update Image (Optional)</label>
+                            <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                class="w-full px-3 py-2 border border-input rounded-md">
+                        </div>
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" @click="showEditGuideModal = false"
+                                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Data Script - MUST be defined BEFORE Alpine.js loads -->
+    <script>
+        function dashboardData() {
+            return {
+                activeTab: 'destinations',
+                showAddModal: false,
+                showEditModal: false,
+                mobileMenuOpen: false,
+                user: JSON.parse(localStorage.getItem('user')),
+                destinations: [],
+                messages: [],
+                newDest: { title: '', description: '', category: '', area: '', address: '', price: '' },
+                editDest: {},
+                imageFile: null,
+
+                // New State for Accommodations, Vehicles, Guides
+                accommodations: [],
+                vehicles: [],
+                guides: [],
+
+                showAddAccModal: false,
+                showEditAccModal: false,
+                newAcc: { name: '', type: '', area: '', priceRange: '', description: '', bookingUrl: '' },
+                editAcc: {},
+
+                showAddVehicleModal: false,
+                showEditVehicleModal: false,
+                newVehicle: { name: '', type: '', area: '', price: '', description: '', contact: '', whatsapp: '' },
+                editVehicle: {},
+
+                showAddGuideModal: false,
+                showEditGuideModal: false,
+                newGuide: { title: '', slug: '', category: '', excerpt: '', content: '', readTime: '' },
+                editGuide: {},
+
+                init() {
+                    if (!this.user || this.user.role !== 'admin') {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    this.fetchDestinations();
+                    this.fetchMessages();
+                    this.fetchAccommodations();
+                    this.fetchVehicles();
+                    this.fetchGuides();
+                },
+
+                logout() {
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                },
+
+                // Destinations
+                async fetchDestinations() {
+                    try {
+                        const res = await fetch('/api/destinations');
+                        this.destinations = await res.json();
+                    } catch (e) { console.error(e); }
+                },
+
+                async addDestination() {
+                    if (!this.newDest.title || !this.newDest.description) return;
+
+                    const formData = new FormData();
+                    formData.append('title', this.newDest.title);
+                    formData.append('description', this.newDest.description);
+                    formData.append('category', this.newDest.category);
+                    formData.append('area', this.newDest.area);
+                    formData.append('address', this.newDest.address);
+                    formData.append('price', this.newDest.price);
+                    formData.append('submitterName', this.user.username);
+                    formData.append('userId', this.user.id);
+
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
+                    }
+
+                    try {
+                        const res = await fetch('/api/destinations', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (res.ok) {
+                            this.showAddModal = false;
+                            this.newDest = { title: '', description: '', category: '', area: '', address: '', price: '' };
+                            this.imageFile = null;
+                            this.fetchDestinations();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                openEditModal(dest) {
+                    this.editDest = { ...dest };
+                    this.imageFile = null;
+                    this.showEditModal = true;
+                },
+
+                async saveEdit() {
+                    const formData = new FormData();
+                    formData.append('title', this.editDest.title);
+                    formData.append('category', this.editDest.category);
+                    formData.append('area', this.editDest.area);
+                    formData.append('address', this.editDest.address || '');
+                    formData.append('price', this.editDest.price || '');
+                    formData.append('description', this.editDest.description || '');
+
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
+                    }
+
+                    try {
+                        const res = await fetch(`/api/destinations/${this.editDest.id}`, {
+                            method: 'PUT',
+                            body: formData
+                        });
+                        if (res.ok) {
+                            this.showEditModal = false;
+                            this.fetchDestinations();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                async deleteDestination(id) {
+                    if (confirm('Are you sure you want to delete this destination?')) {
+                        try {
+                            await fetch(`/api/destinations/${id}`, { method: 'DELETE' });
+                            this.fetchDestinations();
+                        } catch (e) { console.error(e); }
+                    }
+                },
+
+                async updateStatus(id, status) {
+                    try {
+                        const res = await fetch(`/api/destinations/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status })
+                        });
+                        if (res.ok) {
+                            this.fetchDestinations();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                // Messages
+                async fetchMessages() {
+                    try {
+                        const res = await fetch('/api/messages');
+                        this.messages = await res.json();
+                    } catch (e) { console.error(e); }
+                },
+
+                // Accommodations
+                async fetchAccommodations() {
+                    try {
+                        const res = await fetch('/api/accommodations');
+                        this.accommodations = await res.json();
+                    } catch (e) { console.error(e); }
+                },
+
+                async addAccommodation() {
+                    try {
+                        const res = await fetch('/api/accommodations', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.newAcc)
+                        });
+                        if (res.ok) {
+                            this.showAddAccModal = false;
+                            this.newAcc = { name: '', type: '', area: '', priceRange: '', description: '', bookingUrl: '' };
+                            this.fetchAccommodations();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                openEditAccModal(acc) {
+                    this.editAcc = { ...acc };
+                    this.showEditAccModal = true;
+                },
+
+                async saveEditAccommodation() {
+                    try {
+                        const res = await fetch(`/api/accommodations/${this.editAcc.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.editAcc)
+                        });
+                        if (res.ok) {
+                            this.showEditAccModal = false;
+                            this.fetchAccommodations();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                async deleteAccommodation(id) {
+                    if (confirm('Delete this accommodation?')) {
+                        try {
+                            await fetch(`/api/accommodations/${id}`, { method: 'DELETE' });
+                            this.fetchAccommodations();
+                        } catch (e) { console.error(e); }
+                    }
+                },
+
+                // Vehicles
+                async fetchVehicles() {
+                    try {
+                        const res = await fetch('/api/vehicles');
+                        this.vehicles = await res.json();
+                    } catch (e) { console.error(e); }
+                },
+
+                async addVehicle() {
+                    try {
+                        const res = await fetch('/api/vehicles', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.newVehicle)
+                        });
+                        if (res.ok) {
+                            this.showAddVehicleModal = false;
+                            this.newVehicle = { name: '', type: '', area: '', price: '', description: '', contact: '', whatsapp: '' };
+                            this.fetchVehicles();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                openEditVehicleModal(vehicle) {
+                    this.editVehicle = { ...vehicle };
+                    this.showEditVehicleModal = true;
+                },
+
+                async saveEditVehicle() {
+                    try {
+                        const res = await fetch(`/api/vehicles/${this.editVehicle.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.editVehicle)
+                        });
+                        if (res.ok) {
+                            this.showEditVehicleModal = false;
+                            this.fetchVehicles();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                async deleteVehicle(id) {
+                    if (confirm('Delete this vehicle?')) {
+                        try {
+                            await fetch(`/api/vehicles/${id}`, { method: 'DELETE' });
+                            this.fetchVehicles();
+                        } catch (e) { console.error(e); }
+                    }
+                },
+
+                // Guides
+                async fetchGuides() {
+                    try {
+                        const res = await fetch('/api/guides');
+                        this.guides = await res.json();
+                    } catch (e) { console.error(e); }
+                },
+
+                async addGuide() {
+                    const formData = new FormData();
+                    formData.append('title', this.newGuide.title);
+                    formData.append('slug', this.newGuide.slug);
+                    formData.append('category', this.newGuide.category);
+                    formData.append('excerpt', this.newGuide.excerpt);
+                    formData.append('content', this.newGuide.content);
+                    formData.append('readTime', this.newGuide.readTime);
+
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
+                    }
+
+                    try {
+                        const res = await fetch('/api/guides', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (res.ok) {
+                            this.showAddGuideModal = false;
+                            this.newGuide = { title: '', slug: '', category: '', excerpt: '', content: '', readTime: '' };
+                            this.imageFile = null;
+                            this.fetchGuides();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                openEditGuideModal(guide) {
+                    this.editGuide = { ...guide };
+                    this.imageFile = null;
+                    this.showEditGuideModal = true;
+                },
+
+                async saveEditGuide() {
+                    const formData = new FormData();
+                    formData.append('title', this.editGuide.title);
+                    formData.append('slug', this.editGuide.slug);
+                    formData.append('category', this.editGuide.category);
+                    formData.append('excerpt', this.editGuide.excerpt);
+                    formData.append('content', this.editGuide.content);
+                    formData.append('readTime', this.editGuide.readTime);
+
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
+                    }
+
+                    try {
+                        const res = await fetch(`/api/guides/${this.editGuide.id}`, {
+                            method: 'PUT',
+                            body: formData
+                        });
+                        if (res.ok) {
+                            this.showEditGuideModal = false;
+                            this.fetchGuides();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+
+                async deleteGuide(id) {
+                    if (confirm('Delete this guide?')) {
+                        try {
+                            await fetch(`/api/guides/${id}`, { method: 'DELETE' });
+                            this.fetchGuides();
+                        } catch (e) { console.error(e); }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="js/vendor/alpine.js"></script>
+</body>
+
+</html>

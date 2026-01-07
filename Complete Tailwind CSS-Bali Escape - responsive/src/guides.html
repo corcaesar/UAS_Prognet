@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essential Guides - Baliescape</title>
+    
+    <link href="output.css" rel="stylesheet">
+    
+    <script defer src="js/vendor/alpine.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        .badge-culture { @apply bg-purple-100 text-purple-800; }
+        .badge-food { @apply bg-orange-100 text-orange-800; }
+        .badge-travel-tips { @apply bg-blue-100 text-blue-800; }
+        .badge-planning { @apply bg-green-100 text-green-800; }
+        .badge-sustainable-travel { @apply bg-teal-100 text-teal-800; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased bg-background text-foreground">
+    
+    <div x-data="{ isOpen: false }">
+        <header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border h-20 shadow-sm">
+            <nav class="container mx-auto px-4 flex items-center justify-between h-full">
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+                    <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a href="index.html" class="text-muted-foreground transition-colors hover:text-primary">Home</a>
+                    <a href="gems.html" class="text-muted-foreground transition-colors hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" class="text-muted-foreground transition-colors hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" class="text-muted-foreground transition-colors hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" class="text-primary transition-colors hover:text-primary">Essential Guides</a> <a href="submit.html" class="inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 ml-2">
+                        Share Your Gem
+                    </a>
+                </div>
+                <button class="md:hidden p-2" @click="isOpen = !isOpen" aria-label="Toggle menu">
+                    <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                    <svg x-show="isOpen" x-cloak xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+                </button>
+            </nav>
+            <div x-show="isOpen" x-cloak @click.outside="isOpen = false"
+                 class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg py-4">
+                <div class="flex flex-col gap-4 px-4">
+                    <a href="index.html" class="text-muted-foreground hover:text-primary">Home</a>
+                    <a href="gems.html" class="text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" class="text-muted-foreground hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" class="text-muted-foreground hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" class="text-primary hover:text-primary">Essential Guides</a>
+                    <a href="submit.html" class="mt-2 inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 w-full">
+                        Share Your Gem
+                    </a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main class="flex-1 py-12 px-4" x-data="guidesPageData()">
+      <div class="container mx-auto">
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-primary"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-serif font-semibold mb-4">
+            Essential Guides
+          </h1>
+          <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Insider tips, cultural insights, and practical advice for experiencing the authentic Bali
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <template x-for="guide in guides" :key="guide.id">
+            <a :href="'guides_detail.html?slug=' + guide.slug">
+              <div class="h-full rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-all duration-300 group">
+                <div class="p-6">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold" 
+                          :class="getCategoryColorClass(guide.category)"
+                          x-text="guide.category">
+                    </span>
+                    <div class="flex items-center gap-1 text-sm text-muted-foreground">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <span x-text="guide.readTime"></span>
+                    </div>
+                  </div>
+                  
+                  <h3 class="text-xl font-serif font-semibold mb-3 group-hover:text-primary transition-colors" x-text="guide.title"></h3>
+                  
+                  <p class="text-muted-foreground text-sm leading-relaxed" x-text="guide.excerpt"></p>
+                </div>
+              </div>
+            </a>
+          </template>
+          </div>
+
+        <div class="mt-12 text-center">
+          <div class="inline-block rounded-lg border border-primary/20 bg-primary/5 p-8">
+            <h3 class="text-xl font-serif font-semibold mb-3">
+              Have a Guide Suggestion?
+            </h3>
+            <p class="text-muted-foreground mb-4">
+              Let us know what topics you'd like us to cover
+            </p>
+            <a href="contact.html" class="text-primary hover:underline font-medium">
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div class="space-y-4">
+            <a href="index.html" class="flex items-center gap-2">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary h-6 w-6">
+    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+              <span class="text-xl font-serif font-semibold">Baliescape</span>
+            </a>
+            <p class="text-sm text-muted-foreground">
+              Your curated guide to Bali's hidden soul. Discover authentic experiences beyond the tourist trail.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-serif font-semibold mb-4">Explore</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All Gems</a></li>
+              <li><a href="accommodation.html" class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a></li>
+              <li><a href="vehicles.html" class="text-muted-foreground hover:text-primary transition-colors">Vehicle Rental</a></li>
+              <li><a href="guides.html" class="text-muted-foreground hover:text-primary transition-colors">Essential Guides</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-serif font-semibold mb-4">Company</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="about.html" class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+              <li><a href="contact.html" class="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+              <li><a href="submit.html" class="text-muted-foreground hover:text-primary transition-colors">Submit a Gem</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+            <p class="text-sm text-muted-foreground mb-4">
+              Get the latest gems delivered to your inbox.
+            </p>
+            <div class="flex gap-2">
+              <input type="email" placeholder="Your email" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"/>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</button>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+          <div class="flex items-center gap-4">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="mailto:hello@baliescape.com" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        const localGuidesData = [
+          { id: 1, title: "Temple Etiquette in Bali: Essential Do's and Don'ts", excerpt: "Learn the proper way to visit Balinese temples, including dress codes, behavior guidelines, and cultural sensitivity tips.", category: "Culture", readTime: "5 min read", slug: "temple-etiquette" },
+          { id: 2, title: "10 Must-Try Balinese Dishes Beyond Nasi Goreng", excerpt: "Discover authentic Balinese cuisine from lawar to babi guling, with recommendations on where to find the best versions.", category: "Food", readTime: "7 min read", slug: "balinese-dishes" },
+          { id: 3, title: "How to Avoid Traffic in Canggu: Insider Routes", excerpt: "Navigate Canggu like a local with these alternative routes and time-saving tips to skip the notorious traffic jams.", category: "Travel Tips", readTime: "4 min read", slug: "canggu-traffic" },
+          { id: 4, title: "The Best Time to Visit Bali: Month-by-Month Guide", excerpt: "Understand Bali's seasons, festivals, and weather patterns to plan your perfect visit and avoid crowds.", category: "Planning", readTime: "8 min read", slug: "best-time-visit" },
+          { id: 5, title: "Sustainable Tourism in Bali: How to Travel Responsibly", excerpt: "Tips for minimizing your environmental impact, supporting local communities, and being a responsible traveler.", category: "Sustainable Travel", readTime: "6 min read", slug: "sustainable-tourism" },
+          { id: 6, title: "Balinese Ceremonies: Understanding the Island's Spiritual Life", excerpt: "An introduction to Bali's rich ceremonial traditions, from Nyepi to temple anniversaries and family celebrations.", category: "Culture", readTime: "10 min read", slug: "balinese-ceremonies" },
+        ];
+
+        function guidesPageData() {
+            return {
+                guides: localGuidesData,
+                
+                
+                getCategoryColorClass(category) {
+                    const slug = category.toLowerCase().replace(/\s+/g, '-');
+                    switch (slug) {
+                        case 'culture': return 'badge-culture';
+                        case 'food': return 'badge-food';
+                        case 'travel-tips': return 'badge-travel-tips';
+                        case 'planning': 'badge-planning';
+                        case 'sustainable-travel': return 'badge-sustainable-travel';
+                        default: return 'bg-secondary text-secondary-foreground';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

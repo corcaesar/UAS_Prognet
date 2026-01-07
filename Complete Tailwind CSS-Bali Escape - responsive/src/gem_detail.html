@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title akan diupdate oleh Javascript nanti -->
+    <title>Gem Detail - Baliescape</title>
+    <link href="output.css" rel="stylesheet">
+    <!-- Alpine.js dipindah ke bawah script data -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .navbar-transition {
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .badge-culinary {
+            background-color: theme('colors.orange.100');
+            color: theme('colors.orange.800');
+        }
+
+        .badge-spot {
+            background-color: theme('colors.blue.100');
+            color: theme('colors.blue.800');
+        }
+
+        .badge-attraction {
+            background-color: theme('colors.purple.100');
+            color: theme('colors.purple.800');
+        }
+    </style>
+
+    <!-- Script Data Gems Lengkap dan Fungsi Alpine -->
+    <script>
+        function gemDetailData() {
+            return {
+                gem: null,
+                isLoading: true,
+                error: null,
+                async init() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id');
+
+                    if (!id) {
+                        this.error = 'No gem ID provided';
+                        this.isLoading = false;
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/api/destinations/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Gem not found');
+                        }
+                        this.gem = await response.json();
+                        document.title = `${this.gem.title} - Gem Detail - Baliescape`;
+                    } catch (err) {
+                        this.error = err.message;
+                        document.title = 'Gem Not Found - Baliescape';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                formatPrice(price) {
+                    return price || 'Free';
+                }
+            }
+        }
+    </script>
+
+    <!-- Muat Alpine.js SETELAH skrip kustom -->
+    <script src="js/vendor/alpine.js"></script>
+</head>
+
+<body class="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
+
+    <!-- Header Konsisten -->
+    <div x-data="{ isMobileMenuOpen: false, isScrolled: window.scrollY > 50 }"
+        x-init="window.addEventListener('scroll', () => { isScrolled = window.scrollY > 50 })"
+        class="sticky top-0 z-50">
+        <header
+            :class="isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border' : 'bg-background shadow-none border-transparent'"
+            class="border-b navbar-transition">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <a href="index.html" class="flex items-center gap-2 group">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                    </a>
+                    <div class="hidden md:flex items-center gap-6 lg:gap-8">
+                        <a href="index.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Home</a>
+                        <a href="gems.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Explore
+                            Gems</a>
+                        <a href="accommodation.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Accommodation</a>
+                        <a href="vehicles.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Vehicle
+                            Rental</a>
+                        <a href="guides.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Essential
+                            Guides</a>
+                        <a href="submit.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                            Your Gem</a>
+                    </div>
+                    <button class="md:hidden p-2" @click="isMobileMenuOpen = !isMobileMenuOpen"
+                        aria-label="Toggle menu">
+                        <svg x-show="!isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                        <svg x-show="isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div x-show="isMobileMenuOpen" x-cloak x-transition
+                class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg"
+                @click.outside="isMobileMenuOpen = false">
+                <div class="flex flex-col gap-4 p-4">
+                    <a href="index.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Home</a>
+                    <a href="gems.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Essential Guides</a>
+                    <a href="submit.html" @click="isMobileMenuOpen = false"
+                        class="mt-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full">Share
+                        Your Gem</a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Main Content Gem Detail -->
+    <main class="flex-1" x-data="gemDetailData()">
+        <!-- Loading State -->
+        <div x-show="isLoading" class="flex justify-center items-center min-h-[50vh]">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+
+        <!-- Error State -->
+        <div x-show="error" x-cloak class="container mx-auto px-4 py-12 text-center">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Error</h2>
+            <p x-text="error" class="text-muted-foreground mb-6"></p>
+            <a href="gems.html" class="text-primary hover:underline">Back to Gems</a>
+        </div>
+
+        <!-- Content -->
+        <div x-show="gem && !isLoading" x-cloak>
+            <!-- Hero Section -->
+            <div class="relative min-h-[60vh] md:h-[60vh] w-full overflow-hidden">
+                <div class="absolute inset-0 bg-black/30 z-10"></div>
+                <img :src="gem?.imageUrl || 'https://placehold.co/1200x800?text=No+Image'" :alt="gem?.title"
+                    class="w-full h-full object-cover" />
+                <div
+                    class="absolute bottom-0 left-0 w-full z-20 bg-gradient-to-t from-black/80 to-transparent pt-24 pb-12">
+                    <div class="container mx-auto px-4">
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div>
+                                <span
+                                    class="inline-block px-3 py-1 rounded-full bg-primary text-primary-foreground text-sm font-medium mb-4"
+                                    x-text="gem?.category"></span>
+                                <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mb-2"
+                                    x-text="gem?.title"></h1>
+                                <div class="flex items-center text-white/90 gap-4 text-sm md:text-base">
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                        <span x-text="gem?.area"></span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" x2="12" y1="2" y2="22" />
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                        </svg>
+                                        <span x-text="formatPrice(gem?.price)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-lg border border-white/20">
+                                <img :src="gem?.User?.profilePicture || 'https://ui-avatars.com/api/?name=' + (gem?.submitterName || 'User')"
+                                    alt="Contributor"
+                                    class="w-10 h-10 rounded-full object-cover border-2 border-white/50">
+                                <div>
+                                    <p class="text-xs text-white/70 uppercase tracking-wider">Discovered by</p>
+                                    <p class="text-white font-medium"
+                                        x-text="gem?.submitterName || gem?.User?.username || 'Anonymous'"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="prose prose-lg max-w-none text-muted-foreground">
+                            <h3 class="text-2xl font-serif font-semibold text-foreground mb-4">About this Gem</h3>
+                            <p class="whitespace-pre-line" x-text="gem?.longDescription || gem?.description"></p>
+                        </div>
+
+                        <div class="bg-secondary/30 rounded-xl p-6 border border-border">
+                            <h3 class="text-xl font-serif font-semibold mb-4 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="text-primary">
+                                    <path d="M2 22h20" />
+                                    <path d="M12 2v8" />
+                                    <path d="m5 10 7-7 7 7" />
+                                    <path d="m6 16 6-6 6 6" />
+                                </svg>
+                                Local Tips
+                            </h3>
+                            <p class="text-muted-foreground italic"
+                                x-text="gem?.tips || 'No specific tips provided for this location.'"></p>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="space-y-6">
+                        <div class="rounded-xl border bg-card text-card-foreground shadow-sm p-6 sticky top-24">
+                            <h3 class="font-serif font-semibold text-xl mb-6">Visitor Information</h3>
+
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-1 text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <polyline points="12 6 12 12 16 14" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm">Opening Hours</p>
+                                        <p class="text-muted-foreground text-sm" x-text="gem?.hours || 'Not specified'">
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-1 text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm">Address</p>
+                                        <p class="text-muted-foreground text-sm" x-text="gem?.address"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-border">
+                                <a :href="gem?.mapUrl || '#'" target="_blank" rel="noopener noreferrer"
+                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                    </svg>
+                                    Get Directions
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Konsisten -->
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary h-6 w-6">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-xl font-serif font-semibold">Baliescape</span>
+                    </a>
+                    <p class="text-sm text-muted-foreground">Your curated guide to Bali's hidden soul. Discover
+                        authentic experiences beyond the tourist trail.</p>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All
+                                Gems</a></li>
+                        <li><a href="accommodation.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a>
+                        </li>
+                        <li><a href="vehicles.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Vehicle Rental</a>
+                        </li>
+                        <li><a href="guides.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Essential Guides</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="contact.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+                        <li><a href="submit.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Submit a Gem</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Get the latest gems delivered to your inbox.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Your email"
+                            class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                        <button
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                        </svg></a>
+                    <a href="mailto:hello@baliescape.com"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

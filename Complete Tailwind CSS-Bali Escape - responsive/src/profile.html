@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Baliescape</title>
+    <link href="output.css" rel="stylesheet">
+    <script defer src="js/vendor/alpine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
+
+    <div x-data="{ 
+        user: JSON.parse(localStorage.getItem('user')),
+        logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    }" x-init="if(!user) window.location.href = 'login.html'">
+        <header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border h-20 shadow-sm">
+            <nav class="container mx-auto px-4 flex items-center justify-between h-full">
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                    <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                </a>
+
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a href="index.html" class="text-muted-foreground hover:text-primary transition-colors">Home</a>
+                    <a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">Explore
+                        Gems</a>
+                    <a href="submit.html"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                        Your Gem</a>
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.outside="open = false"
+                            class="flex items-center gap-2 focus:outline-none">
+                            <img :src="user.profilePicture || 'https://ui-avatars.com/api/?name=' + user.username"
+                                alt="Profile" class="w-8 h-8 rounded-full border border-border object-cover">
+                            <span x-text="user.username" class="font-medium"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-4 h-4">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div x-show="open" x-transition
+                            class="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-50">
+                            <a href="profile.html" class="block px-4 py-2 text-sm bg-accent text-accent-foreground">My
+                                Profile</a>
+                            <button @click="logout()"
+                                class="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container mx-auto px-4 py-12 max-w-5xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Sidebar Profile -->
+                <div class="md:col-span-1 space-y-6">
+                    <div class="bg-card border border-border rounded-lg p-6 text-center shadow-sm">
+                        <div class="relative inline-block mb-4 group">
+                            <img :src="user.profilePicture || 'https://ui-avatars.com/api/?name=' + user.username"
+                                alt="Profile"
+                                class="w-32 h-32 rounded-full border-4 border-background shadow-md object-cover mx-auto">
+                            <button @click="$dispatch('open-edit-profile')"
+                                class="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full shadow-sm hover:bg-primary/90 transition-colors"
+                                title="Change Profile Picture">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <h2 class="text-2xl font-serif font-bold text-foreground" x-text="user.username"></h2>
+                        <p class="text-muted-foreground text-sm mb-4"
+                            x-text="user.role === 'admin' ? 'Administrator' : 'Explorer'">
+                        </p>
+
+                        <div class="flex items-center justify-center gap-2 bg-secondary/50 py-2 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="text-primary">
+                                <circle cx="12" cy="8" r="7" />
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                            </svg>
+                            <span class="font-bold text-lg" x-text="user.points || 0"></span>
+                            <span class="text-sm text-muted-foreground">Points</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="md:col-span-2 space-y-8" x-data="{ 
+                    submissions: [],
+                    loading: true,
+                    async fetchSubmissions() {
+                        try {
+                            const res = await fetch(`/api/destinations?userId=${user.id}`);
+                            this.submissions = await res.json();
+                        } catch (e) {
+                            console.error(e);
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+                    async deleteSubmission(id) {
+                        if(!confirm('Are you sure you want to delete this submission?')) return;
+                        try {
+                            const res = await fetch(`/api/destinations/${id}`, { method: 'DELETE' });
+                            if(res.ok) {
+                                this.submissions = this.submissions.filter(s => s.id !== id);
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                }" x-init="fetchSubmissions()">
+
+                    <div>
+                        <h3 class="text-2xl font-serif font-semibold mb-6">
+                            My Submissions</h3>
+
+                        <div x-show="loading" class="text-center py-12 text-muted-foreground">
+                            Loading...</div>
+
+                        <div x-show="!loading && submissions.length === 0"
+                            class="text-center py-12 border border-dashed border-border rounded-lg">
+                            <p class="text-muted-foreground mb-4">You
+                                haven't shared any gems
+                                yet.</p>
+                            <a href="submit.html"
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-9 px-4 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                                a Gem</a>
+                        </div>
+
+                        <div class="space-y-4" x-show="!loading && submissions.length > 0">
+                            <template x-for="item in submissions" :key="item.id">
+                                <div
+                                    class="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-lg bg-card hover:shadow-sm transition-shadow">
+                                    <img :src="item.imageUrl || 'https://placehold.co/600x400?text=No+Image'"
+                                        class="w-full sm:w-32 h-32 object-cover rounded-md bg-muted">
+                                    <div class="flex-1 space-y-2">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-semibold text-lg" x-text="item.title">
+                                                </h4>
+                                                <p class="text-sm text-muted-foreground line-clamp-1"
+                                                    x-text="item.description">
+                                                </p>
+                                            </div>
+                                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium capitalize"
+                                                :class="{
+                                                    'bg-yellow-100 text-yellow-800': item.status === 'pending',
+                                                    'bg-green-100 text-green-800': item.status === 'approved',
+                                                    'bg-red-100 text-red-800': item.status === 'rejected'
+                                                }" x-text="item.status"></span>
+                                        </div>
+                                        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+                                            <span x-text="new Date(item.createdAt).toLocaleDateString()"></span>
+                                            <span>•</span>
+                                            <span x-text="item.category || 'Uncategorized'" class="capitalize"></span>
+                                        </div>
+                                        <div class="pt-2 flex gap-2">
+                                            <button @click="$dispatch('open-edit-destination', item)"
+                                                class="text-sm text-primary hover:underline">Edit</button>
+                                            <button @click="deleteSubmission(item.id)"
+                                                class="text-sm text-destructive hover:underline">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Edit Profile Modal -->
+        <div x-data="{ open: false, imageFile: null }" @open-edit-profile.window="open = true" x-show="open" x-cloak
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-background p-6 rounded-lg shadow-lg w-full max-w-md" @click.outside="open = false">
+                <h3 class="text-xl font-serif font-semibold mb-4">Update
+                    Profile Picture</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Upload New Picture</label>
+                        <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button @click="open = false"
+                            class="px-4 py-2 text-sm font-medium hover:bg-accent rounded-md">Cancel</button>
+                        <button @click="
+                            if (!imageFile) return;
+                            const formData = new FormData();
+                            formData.append('profilePicture', imageFile);
+                            
+                            fetch(`/api/users/${user.id}`, {
+                                method: 'PUT',
+                                body: formData
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                localStorage.setItem('user', JSON.stringify(data.user));
+                                window.location.reload();
+                            })
+                            .catch(err => console.error(err));
+                        "
+                            class="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Destination Modal -->
+        <div x-data="{ open: false, editData: {}, imageFile: null }"
+            @open-edit-destination.window="open = true; editData = { ...$event.detail }; imageFile = null" x-show="open"
+            x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-background p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto"
+                @click.outside="open = false">
+                <h3 class="text-xl font-serif font-semibold mb-4">Edit
+                    Destination</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Title</label>
+                        <input type="text" x-model="editData.title"
+                            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Category</label>
+                        <select x-model="editData.category"
+                            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            <option value="culinary">Culinary</option>
+                            <option value="spot">Hidden Spot</option>
+                            <path d="m6 9 6 6 6-6" />
+                            </svg>
+                            </button>
+                            <div x-show="open" x-transition
+                                class="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-50">
+                                <a href="profile.html"
+                                    class="block px-4 py-2 text-sm bg-accent text-accent-foreground">My
+                                    Profile</a>
+                                <button @click="logout()"
+                                    class="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10">Logout</button>
+                            </div>
+                    </div>
+                </div>
+                </nav>
+                </header>
+
+                <main class="container mx-auto px-4 py-12 max-w-5xl">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Sidebar Profile -->
+                        <div class="md:col-span-1 space-y-6">
+                            <div class="bg-card border border-border rounded-lg p-6 text-center shadow-sm">
+                                <div class="relative inline-block mb-4 group">
+                                    <img :src="user.profilePicture || 'https://ui-avatars.com/api/?name=' + user.username"
+                                        alt="Profile"
+                                        class="w-32 h-32 rounded-full border-4 border-background shadow-md object-cover mx-auto">
+                                    <button @click="$dispatch('open-edit-profile')"
+                                        class="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full shadow-sm hover:bg-primary/90 transition-colors"
+                                        title="Change Profile Picture">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <h2 class="text-2xl font-serif font-bold text-foreground" x-text="user.username"></h2>
+                                <p class="text-muted-foreground text-sm mb-4"
+                                    x-text="user.role === 'admin' ? 'Administrator' : 'Explorer'">
+                                </p>
+
+                                <div class="flex items-center justify-center gap-2 bg-secondary/50 py-2 rounded-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="text-primary">
+                                        <circle cx="12" cy="8" r="7" />
+                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                                    </svg>
+                                    <span class="font-bold text-lg" x-text="user.points || 0"></span>
+                                    <span class="text-sm text-muted-foreground">Points</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="md:col-span-2 space-y-8" x-data="{ 
+                    submissions: [],
+                    loading: true,
+                    async fetchSubmissions() {
+                        try {
+                            const res = await fetch(`/api/destinations?userId=${user.id}`);
+                            this.submissions = await res.json();
+                        } catch (e) {
+                            console.error(e);
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+                    async deleteSubmission(id) {
+                        if(!confirm('Are you sure you want to delete this submission?')) return;
+                        try {
+                            const res = await fetch(`/api/destinations/${id}`, { method: 'DELETE' });
+                            if(res.ok) {
+                                this.submissions = this.submissions.filter(s => s.id !== id);
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                }" x-init="fetchSubmissions()">
+
+                            <div>
+                                <h3 class="text-2xl font-serif font-semibold mb-6">
+                                    My Submissions</h3>
+
+                                <div x-show="loading" class="text-center py-12 text-muted-foreground">
+                                    Loading...</div>
+
+                                <div x-show="!loading && submissions.length === 0"
+                                    class="text-center py-12 border border-dashed border-border rounded-lg">
+                                    <p class="text-muted-foreground mb-4">You
+                                        haven't shared any gems
+                                        yet.</p>
+                                    <a href="submit.html"
+                                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-9 px-4 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                                        a Gem</a>
+                                </div>
+
+                                <div class="space-y-4" x-show="!loading && submissions.length > 0">
+                                    <template x-for="item in submissions" :key="item.id">
+                                        <div
+                                            class="flex flex-col sm:flex-row gap-4 p-4 border border-border rounded-lg bg-card hover:shadow-sm transition-shadow">
+                                            <img :src="item.imageUrl || 'https://placehold.co/600x400?text=No+Image'"
+                                                class="w-full sm:w-32 h-32 object-cover rounded-md bg-muted">
+                                            <div class="flex-1 space-y-2">
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 class="font-semibold text-lg" x-text="item.title">
+                                                        </h4>
+                                                        <p class="text-sm text-muted-foreground line-clamp-1"
+                                                            x-text="item.description">
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        class="px-2.5 py-0.5 rounded-full text-xs font-medium capitalize"
+                                                        :class="{
+                                                    'bg-yellow-100 text-yellow-800': item.status === 'pending',
+                                                    'bg-green-100 text-green-800': item.status === 'approved',
+                                                    'bg-red-100 text-red-800': item.status === 'rejected'
+                                                }" x-text="item.status"></span>
+                                                </div>
+                                                <div class="flex items-center gap-4 text-sm text-muted-foreground">
+                                                    <span x-text="new Date(item.createdAt).toLocaleDateString()"></span>
+                                                    <span>•</span>
+                                                    <span x-text="item.category || 'Uncategorized'"
+                                                        class="capitalize"></span>
+                                                </div>
+                                                <div class="pt-2 flex gap-2">
+                                                    <button @click="$dispatch('open-edit-destination', item)"
+                                                        class="text-sm text-primary hover:underline">Edit</button>
+                                                    <button @click="deleteSubmission(item.id)"
+                                                        class="text-sm text-destructive hover:underline">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Edit Profile Modal -->
+                <div x-data="{ open: false, imageFile: null }" @open-edit-profile.window="open = true" x-show="open"
+                    x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div class="bg-background p-6 rounded-lg shadow-lg w-full max-w-md" @click.outside="open = false">
+                        <h3 class="text-xl font-serif font-semibold mb-4">Update
+                            Profile Picture</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Upload New Picture</label>
+                                <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button @click="open = false"
+                                    class="px-4 py-2 text-sm font-medium hover:bg-accent rounded-md">Cancel</button>
+                                <button @click="
+                            if (!imageFile) return;
+                            const formData = new FormData();
+                            formData.append('profilePicture', imageFile);
+                            
+                            fetch(`/api/users/${user.id}`, {
+                                method: 'PUT',
+                                body: formData
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                localStorage.setItem('user', JSON.stringify(data.user));
+                                window.location.reload();
+                            })
+                            .catch(err => console.error(err));
+                        " class="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Destination Modal -->
+                <div x-data="{ open: false, editData: {}, imageFile: null }"
+                    @open-edit-destination.window="open = true; editData = { ...$event.detail }; imageFile = null"
+                    x-show="open" x-cloak
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div class="bg-background p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto"
+                        @click.outside="open = false">
+                        <h3 class="text-xl font-serif font-semibold mb-4">Edit
+                            Destination</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Title</label>
+                                <input type="text" x-model="editData.title"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <select x-model="editData.category"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                    <option value="culinary">Culinary</option>
+                                    <option value="spot">Hidden Spot</option>
+                                    <option value="attraction">Attraction</option>
+                                    <option value="accommodation">Accommodation
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Area</label>
+                                <select x-model="editData.area"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                    <option value="Kuta">Kuta</option>
+                                    <option value="Seminyak">Seminyak</option>
+                                    <option value="Canggu">Canggu</option>
+                                    <option value="Ubud">Ubud</option>
+                                    <option value="Uluwatu">Uluwatu</option>
+                                    <option value="Nusa Dua">Nusa Dua</option>
+                                    <option value="Sanur">Sanur</option>
+                                    <option value="Denpasar">Denpasar</option>
+                                    <option value="North Bali">North Bali</option>
+                                    <option value="East Bali">East Bali</option>
+                                    <option value="West Bali">West Bali</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Address</label>
+                                <input type="text" x-model="editData.address"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Price</label>
+                                <input type="text" x-model="editData.price"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Description</label>
+                                <textarea x-model="editData.description" rows="3"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Long Description</label>
+                                <textarea x-model="editData.longDescription" rows="5"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Opening Hours</label>
+                                <input type="text" x-model="editData.hours"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Tips</label>
+                                <textarea x-model="editData.tips" rows="3"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Map URL</label>
+                                <input type="text" x-model="editData.mapUrl"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Update Image (Optional)</label>
+                                <input type="file" accept="image/*" @change="imageFile = $event.target.files[0]"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2 mt-6">
+                            <button @click="open = false"
+                                class="px-4 py-2 text-sm font-medium hover:bg-accent rounded-md">Cancel</button>
+                            <button @click="
+                        const formData = new FormData();
+                        formData.append('title', editData.title);
+                        formData.append('category', editData.category);
+                        formData.append('area', editData.area);
+                        formData.append('address', editData.address || '');
+                        formData.append('price', editData.price || '');
+                        formData.append('description', editData.description || '');
+                        formData.append('longDescription', editData.longDescription || '');
+                        formData.append('hours', editData.hours || '');
+                        formData.append('tips', editData.tips || '');
+                        formData.append('mapUrl', editData.mapUrl || '');
+                        
+                        if (imageFile) {
+                            formData.append('image', imageFile);
+                        }
+                        
+                        fetch(`/api/destinations/${editData.id}`, {
+                            method: 'PUT',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            // Update local list
+                            const index = submissions.findIndex(s => s.id === editData.id);
+                            if (index !== -1) {
+                                submissions[index] = { ...submissions[index], ...data };
+                            }
+                            open = false;
+                        })
+                        .catch(err => console.error(err));
+                    " class="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90">Save
+                                Changes</button>
+                        </div>
+                    </div>
+                </div>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Baliescape</title>
+
+    <link href="output.css" rel="stylesheet">
+    <script defer src="js/vendor/alpine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-sans antialiased">
+    <div class="flex min-h-screen">
+        <!-- Left Side - Form -->
+        <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-background">
+            <div class="max-w-md w-full space-y-8">
+                <!-- Logo and Title -->
+                <div class="text-center">
+                    <a href="index.html" class="inline-flex justify-center items-center gap-2 mb-6 group">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary transition-transform group-hover:scale-110 h-8 w-8">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                    </a>
+                    <h2 class="mt-2 text-3xl font-serif font-bold text-gray-900">Welcome Back</h2>
+                    <p class="mt-2 text-sm text-muted-foreground">Sign in to continue your journey</p>
+                </div>
+
+                <!-- Login Form -->
+                <form class="mt-8 space-y-6" x-data="{ 
+                      username: '', 
+                      password: '', 
+                      isSubmitting: false, 
+                      errorMessage: '',
+                      successMessage: ''
+                  }" @submit.prevent="
+                      isSubmitting = true;
+                      errorMessage = '';
+                      successMessage = '';
+                      
+                      fetch('/api/auth/login', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ username, password })
+                      })
+                      .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                      .then(result => {
+                          if (result.status === 200) {
+                              localStorage.setItem('user', JSON.stringify(result.body.user));
+                              successMessage = 'Login successful! Redirecting...';
+                              setTimeout(() => {
+                                  if (result.body.user.role === 'admin') {
+                                      window.location.href = 'dashboard.html';
+                                  } else {
+                                      window.location.href = 'index.html';
+                                  }
+                              }, 1500);
+                          } else {
+                              errorMessage = result.body.error || 'Login failed';
+                              isSubmitting = false;
+                          }
+                      })
+                      .catch(err => {
+                          errorMessage = 'An error occurred. Please try again.';
+                          console.error(err);
+                          isSubmitting = false;
+                      });
+                  ">
+
+                    <!-- Error Message Alert -->
+                    <div x-show="errorMessage" x-cloak x-transition
+                        class="rounded-lg bg-red-50 p-4 border border-red-200">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor"
+                                    aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800" x-text="errorMessage"></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success Message Alert -->
+                    <div x-show="successMessage" x-cloak x-transition
+                        class="rounded-lg bg-green-50 p-4 border border-green-200">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor"
+                                    aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-green-800" x-text="successMessage"></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Fields -->
+                    <div class="space-y-5">
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                                Username
+                            </label>
+                            <input id="username" name="username" type="text" x-model="username" required
+                                class="appearance-none relative block w-full px-4 py-3 border border-input placeholder-muted-foreground text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
+                                placeholder="Enter your username">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                Password
+                            </label>
+                            <input id="password" name="password" type="password" x-model="password" required
+                                class="appearance-none relative block w-full px-4 py-3 border border-input placeholder-muted-foreground text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
+                                placeholder="Enter your password">
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-3">
+                        <button type="submit" :disabled="isSubmitting"
+                            class="group relative w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow">
+                            <svg x-show="!isSubmitting && !successMessage" class="h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <svg x-show="isSubmitting" x-cloak class="animate-spin h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <span
+                                x-text="isSubmitting ? 'Signing in...' : (successMessage ? 'Success!' : 'Sign in')"></span>
+                        </button>
+
+                        <a href="index.html"
+                            class="w-full flex justify-center py-3 px-4 border border-input text-sm font-medium rounded-lg text-foreground bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all">
+                            Back to Home
+                        </a>
+                    </div>
+
+                    <!-- Register Link -->
+                    <div class="text-center">
+                        <p class="text-sm text-muted-foreground">
+                            Don't have an account?
+                            <a href="register.html"
+                                class="font-semibold text-primary hover:text-primary/80 transition-colors">
+                                Create one now
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side - Hero Image/Gradient -->
+        <div class="hidden lg:block relative flex-1">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-background"></div>
+            <div class="absolute inset-0 flex items-center justify-center p-12">
+                <div class="max-w-lg text-center space-y-6">
+                    <h2 class="text-4xl font-serif font-bold text-foreground">
+                        Welcome Back to Baliescape
+                    </h2>
+                    <p class="text-lg text-muted-foreground">
+                        Continue exploring Bali's hidden treasures and authentic experiences. Your adventure awaits.
+                    </p>
+                    <div class="flex items-center justify-center gap-8 pt-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary">1000+</div>
+                            <div class="text-sm text-muted-foreground">Hidden Gems</div>
+                        </div>
+                        <div class="h-12 w-px bg-border"></div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary">5000+</div>
+                            <div class="text-sm text-muted-foreground">Happy Travelers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
