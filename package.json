@@ -2,8 +2,9 @@
   "name": "tailwind-css-bali-escape",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "watch": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch"
   },
   "keywords": [],
