@@ -17,7 +17,7 @@ User.hasMany(Destination, { foreignKey: 'userId' });
 Destination.belongsTo(User, { foreignKey: 'userId' });
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, 'src', 'uploads');
