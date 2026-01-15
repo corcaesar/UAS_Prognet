@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "prettier.printWidth": 200,
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.bracketSameLine": true,
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": []
+}

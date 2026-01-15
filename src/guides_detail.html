@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Etiquette in Bali - Essential Guides - Baliescape</title> 
+    
+    <link href="output.css" rel="stylesheet">
+    
+    <script src="js/vendor/tailwindcss.js?plugins=typography"></script>
+
+    <script defer src="js/vendor/alpine.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    
+     <style>
+        [x-cloak] { display: none !important; }
+        /* Mengambil style badge dari guides.html */
+        .badge-culture { @apply bg-purple-100 text-purple-800; }
+     </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased bg-background text-foreground">
+    
+    <div x-data="{ isOpen: false }">
+        <header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border h-20 shadow-sm">
+            <nav class="container mx-auto px-4 flex items-center justify-between h-full">
+                <a href="index.html" class="flex items-center gap-2 group">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a href="index.html" class="text-muted-foreground transition-colors hover:text-primary">Home</a>
+                    <a href="gems.html" class="text-muted-foreground transition-colors hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" class="text-muted-foreground transition-colors hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" class="text-muted-foreground transition-colors hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" class="text-primary transition-colors hover:text-primary">Essential Guides</a> 
+                    <a href="submit.html" class="inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 ml-2">
+                        Share Your Gem
+                    </a>
+                </div>
+                <button class="md:hidden p-2" @click="isOpen = !isOpen" aria-label="Toggle menu">
+                    <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                    <svg x-show="isOpen" x-cloak xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+                </button>
+            </nav>
+            <div x-show="isOpen" x-cloak @click.outside="isOpen = false"
+                 class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg py-4">
+                <div class="flex flex-col gap-4 px-4">
+                    <a href="index.html" class="text-muted-foreground hover:text-primary">Home</a>
+                    <a href="gems.html" class="text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" class="text-muted-foreground hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" class="text-muted-foreground hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" class="text-primary hover:text-primary">Essential Guides</a>
+                    <a href="submit.html" class="mt-2 inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 w-full">
+                        Share Your Gem
+                    </a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main class="flex-1 py-12 px-4">
+        <div class="container mx-auto max-w-3xl">
+            <div class="mb-10">
+                <a href="guides.html" class="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-primary">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="m15 18-6-6 6-6"/></svg>
+                    Back to Guides
+                </a>
+                <div class="flex items-center gap-4 mb-4">
+                     <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold badge-culture">
+                       Culture 
+                     </span>
+                    <div class="flex items-center gap-1 text-sm text-muted-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                         <span>5 min read</span> 
+                    </div>
+                </div>
+                 <h1 class="text-4xl md:text-5xl font-serif font-bold mb-4 leading-tight">
+                    Temple Etiquette in Bali: Essential Do's and Don'ts 
+                 </h1>
+                <p class="text-lg text-muted-foreground">
+                   Learn the proper way to visit Balinese temples, including dress codes, behavior guidelines, and cultural sensitivity tips.
+                </p>
+            </div>
+
+            <article class="prose prose-lg max-w-none prose-a:text-primary hover:prose-a:underline prose-headings:font-serif">
+                <p>Visiting temples (pura) is a significant part of experiencing Balinese culture. These sacred sites are places of worship and community gathering. To show respect and ensure a positive experience, it's crucial to understand and follow the local etiquette.</p>
+                
+                <h2>Dress Code: Covering Up is Key</h2>
+                <p>Proper attire is mandatory when entering any Balinese temple. Both men and women are required to cover their shoulders and knees.</p>
+                <ul>
+                    <li><strong>Sarong (Kain):</strong> A cloth wrapped around the waist, covering the legs. Most major temples rent these out at the entrance for a small fee or donation, but it's handy to carry your own.</li>
+                    <li><strong>Sash (Selendang):</strong> Tied around the waist over the sarong. This symbolically separates the 'pure' upper body from the 'impure' lower body. Rental places usually provide this with the sarong.</li>
+                    <li><strong>Tops:</strong> Shoulders should be covered. A t-shirt or a sleeved top is appropriate. Avoid tank tops or sleeveless shirts.</li>
+                </ul>
+                <p>Think conservative and respectful. The focus should be on the spiritual atmosphere, not on revealing clothing.</p>
+
+                <h2>Behavior: Respect and Reverence</h2>
+                <p>Your conduct inside the temple grounds should reflect the sanctity of the place.</p>
+                <blockquote>"When in doubt, observe what the locals do and follow their lead."</blockquote>
+                <ul>
+                    <li><strong>Menstruating Women:</strong> Traditionally, women who are menstruating are requested not to enter temples. This is rooted in ancient beliefs about purity.</li>
+                    <li><strong>Open Wounds:</strong> Similarly, individuals with open, bleeding wounds are generally asked not to enter.</li>
+                    <li><strong>Pointing Feet:</strong> Avoid pointing your feet directly at shrines, offerings, or priests. Sit cross-legged or kneel respectfully.</li>
+                    <li><strong>Walking in Front of Praying People:</strong> Never walk directly in front of someone who is praying. Pass behind them quietly.</li>
+                    <li><strong>Touching Shrines/Offerings:</strong> Do not touch religious objects, shrines, or offerings unless invited to do so.</li>
+                    <li><strong>Photography:</strong> Be mindful when taking photos. Avoid using flash, especially during ceremonies, and never climb on structures to get a better shot. Ask for permission before photographing people, particularly priests or those praying.</li>
+                    <li><strong>Noise Levels:</strong> Keep conversations quiet and respectful. Avoid loud laughter or shouting.</li>
+* <li><strong>Donations:</strong> While entry is often free or requires a small ticket fee, donations are usually welcome to help with temple upkeep. Give modestly and sincerely.</li>
+                </ul>
+
+                <h2>Ceremonies: Observe with Sensitivity</h2>
+                <p>If you are fortunate enough to witness a temple ceremony (odalan), it's a special experience. Remember you are a guest.</p>
+                <ul>
+                    <li>Keep a respectful distance.</li>
+                    <li>Do not obstruct processions or rituals.</li>
+                    <li>Follow photography guidelines strictly – sometimes photography is prohibited during specific rites.</li>
+                    <li>A local guide can often explain the significance of the ceremony, enhancing your understanding and ensuring you remain respectful.</li>
+                </ul>
+
+                <hr/> 
+
+                <p>By following these simple guidelines, you can ensure your visit to Bali's beautiful temples is respectful and enriching, allowing you to appreciate the deep spirituality and cultural heritage of the island.</p>
+
+            </article>
+        </div>
+    </main>
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-primary h-6 w-6">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="text-xl font-serif font-semibold">Baliescape</span>
+                    </a>
+                    <p class="text-sm text-muted-foreground">
+                        Your curated guide to Bali's hidden soul. Discover authentic experiences beyond the tourist trail.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All Gems</a></li>
+                        <li><a href="accommodation.html" class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a></li>
+                        <li><a href="vehicles.html" class="text-muted-foreground hover:text-primary transition-colors">Vehicle Rental</a></li>
+                        <li><a href="guides.html" class="text-muted-foreground hover:text-primary transition-colors">Essential Guides</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html" class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+                        <li><a href="submit.html" class="text-muted-foreground hover:text-primary transition-colors">Submit a Gem</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-sm text-muted-foreground mb-4">
+                        Get the latest gems delivered to your inbox.
+                    </p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Your email" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"/>
+                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+                    <a href="mailto:hello@baliescape.com" class="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    </body>
+</html>

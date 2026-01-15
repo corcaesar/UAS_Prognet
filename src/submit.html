@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Gem - Baliescape</title>
+    <link href="output.css" rel="stylesheet">
+    <script defer src="js/vendor/alpine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .navbar-transition {
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
+
+    <div x-data="{ isMobileMenuOpen: false, isScrolled: window.scrollY > 50 }"
+        x-init="window.addEventListener('scroll', () => { isScrolled = window.scrollY > 50 })"
+        class="sticky top-0 z-50">
+        <header
+            :class="isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border' : 'bg-background shadow-none border-transparent'"
+            class="border-b navbar-transition">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <a href="index.html" class="flex items-center gap-2 group">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                    </a>
+                    <div class="hidden md:flex items-center gap-6 lg:gap-8">
+                        <a href="index.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Home</a>
+                        <a href="gems.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Explore
+                            Gems</a>
+                        <a href="submit.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                            Your Gem</a>
+                    </div>
+                    <button class="md:hidden p-2" @click="isMobileMenuOpen = !isMobileMenuOpen"
+                        aria-label="Toggle menu">
+                        <svg x-show="!isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                        <svg x-show="isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div x-show="isMobileMenuOpen" x-cloak x-transition
+                class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg"
+                @click.outside="isMobileMenuOpen = false">
+                <div class="flex flex-col gap-4 p-4">
+                    <a href="index.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Home</a>
+                    <a href="gems.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="submit.html" @click="isMobileMenuOpen = false"
+                        class="mt-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full">Share
+                        Your Gem</a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main class="flex-1 py-12 px-4">
+        <div class="container mx-auto max-w-3xl">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-6 h-6 text-primary">
+                        <path
+                            d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6-6a2 2 0 0 0-2.828 0L.062 8.5A2 2 0 0 0 0 9.937l6 6a2 2 0 0 0 1.437 1.437l6 6a2 2 0 0 0 2.828 0l.438-.437a2 2 0 0 0 0-2.828z" />
+                        <path d="M16 5h2" />
+                        <path d="M17.5 3.5v3" />
+                        <path d="M14 9h2" />
+                        <path d="M15.5 7.5v3" />
+                        <path d="m3.5 15.5 4 4" />
+                        <path d="m14 3.5 4 4" />
+                    </svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-serif font-semibold mb-4">
+                    Share Your Hidden Gem
+                </h1>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Help fellow travelers discover authentic Bali. Your submission will be reviewed by our team before
+                    being published.
+                </p>
+            </div>
+
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" x-data="{ 
+                user: JSON.parse(localStorage.getItem('user')),
+                agreed: false, 
+                isSubmitting: false, 
+                formData: {
+                    title: '',
+                    category: 'spot',
+                    area: 'Canggu',
+                    address: '',
+                    price: '',
+                    description: '',
+                    longDescription: '',
+                    hours: '',
+                    tips: '',
+                    mapUrl: '',
+                    image: null
+                },
+                handleFileChange(event) {
+                    this.formData.image = event.target.files[0];
+                },
+                async submitForm() {
+                    if (!this.agreed) {
+                        alert('Please confirm that the information is accurate.');
+                        return;
+                    }
+                    this.isSubmitting = true;
+                    
+                    const data = new FormData();
+                    data.append('title', this.formData.title);
+                    data.append('category', this.formData.category);
+                    data.append('area', this.formData.area);
+                    data.append('address', this.formData.address);
+                    data.append('price', this.formData.price);
+                    data.append('description', this.formData.description);
+                    data.append('longDescription', this.formData.longDescription);
+                    data.append('hours', this.formData.hours);
+                    data.append('tips', this.formData.tips);
+                    data.append('mapUrl', this.formData.mapUrl);
+                    
+                    if (this.user) {
+                        data.append('userId', this.user.id);
+                        data.append('submitterName', this.user.username);
+                    } else {
+                        alert('You must be logged in to submit a gem.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    if (this.formData.image) {
+                        data.append('image', this.formData.image);
+                    }
+
+                    try {
+                        const response = await fetch('/api/destinations', {
+                            method: 'POST',
+                            body: data
+                        });
+
+                        if (response.ok) {
+                            alert('Gem submitted successfully!');
+                            window.location.href = 'gems.html';
+                        } else {
+                            const errorData = await response.json();
+                            alert('Failed to submit gem: ' + (errorData.error || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('Error submitting gem:', error);
+                        alert('An error occurred while submitting the gem.');
+                    } finally {
+                        this.isSubmitting = false;
+                    }
+                }
+            }">
+
+                <!-- Login Required Message -->
+                <div x-show="!user" class="flex flex-col items-center justify-center py-16 px-4 text-center space-y-6">
+                    <div class="bg-primary/10 p-4 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="text-primary">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                            <polyline points="10 17 15 12 10 7" />
+                            <line x1="15" x2="3" y1="12" y2="12" />
+                        </svg>
+                    </div>
+                    <div class="max-w-md space-y-2">
+                        <h3 class="text-2xl font-serif font-semibold">Login Required</h3>
+                        <p class="text-muted-foreground">Please log in to share your hidden gems with the community.
+                            This helps us maintain quality and give you credit for your discoveries.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="login.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                            Log In
+                        </a>
+                        <a href="register.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
+                            Create Account
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Submission Form -->
+                <div x-show="user" x-cloak>
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <h3 class="text-2xl font-serif font-semibold leading-none tracking-tight">Gem Details</h3>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <form @submit.prevent="submitForm" class="space-y-6">
+                            <div class="space-y-2">
+                                <label for="title"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Gem
+                                    Name *</label>
+                                <input id="title" x-model="formData.title"
+                                    placeholder="e.g. Hidden Waterfall, Secret Beach" required maxlength="100"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label for="category"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Category</label>
+                                    <select id="category" x-model="formData.category"
+                                        class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="culinary">Culinary</option>
+                                        <option value="spot">Hidden Spot</option>
+                                        <option value="attraction">Attraction</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="area"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Area</label>
+                                    <select id="area" x-model="formData.area"
+                                        class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="Canggu">Canggu</option>
+                                        <option value="Ubud">Ubud</option>
+                                        <option value="Uluwatu">Uluwatu</option>
+                                        <option value="Seminyak">Seminyak</option>
+                                        <option value="Jimbaran">Jimbaran</option>
+                                        <option value="Nusa Penida">Nusa Penida</option>
+                                        <option value="Tabanan">Tabanan</option>
+                                        <option value="Karangasem">Karangasem</option>
+                                        <option value="Denpasar">Denpasar</option>
+                                        <option value="North Bali">North Bali</option>
+                                        <option value="East Bali">East Bali</option>
+                                        <option value="West Bali">West Bali</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="address"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Exact
+                                    Address or Google Maps Link *</label>
+                                <input id="address" x-model="formData.address"
+                                    placeholder="e.g., Jl. Raya Ubud No. 123 or https://maps.app.goo.gl/..." required
+                                    maxlength="255"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="price"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Price
+                                    / Entry Fee</label>
+                                <input id="price" x-model="formData.price" placeholder="e.g. IDR 50k / Free"
+                                    maxlength="100"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="description"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Short
+                                    Description *</label>
+                                <textarea id="description" x-model="formData.description"
+                                    placeholder="Brief summary for the card view..." required rows="3" maxlength="200"
+                                    class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                                <p class="text-xs text-muted-foreground">Maximum 200 characters</p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="longDescription"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full
+                                    Description (Why is this place special?) *</label>
+                                <textarea id="longDescription" x-model="formData.longDescription"
+                                    placeholder="Share the full story, what makes this gem unique and worth visiting..."
+                                    required rows="6" maxlength="2000"
+                                    class="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label for="hours"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Opening
+                                        Hours</label>
+                                    <input id="hours" x-model="formData.hours" placeholder="e.g. 09:00 - 17:00"
+                                        maxlength="100"
+                                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="mapUrl"
+                                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Google
+                                        Maps URL</label>
+                                    <input id="mapUrl" x-model="formData.mapUrl"
+                                        placeholder="https://maps.app.goo.gl/..." maxlength="255"
+                                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="tips"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Local
+                                    Tips</label>
+                                <textarea id="tips" x-model="formData.tips"
+                                    placeholder="e.g. Best time to visit is sunset, bring cash..." rows="3"
+                                    maxlength="500"
+                                    class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"></textarea>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="image"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Upload
+                                    Image</label>
+                                <input id="image" type="file" accept="image/*" @change="handleFileChange"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                                <p class="text-xs text-muted-foreground">Upload a photo of the place</p>
+                            </div>
+
+                            <div class="flex items-start gap-2 p-4 bg-accent/30 rounded-lg">
+                                <input type="checkbox" id="accuracy" x-model="agreed"
+                                    class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1" />
+                                <div>
+                                    <label for="accuracy" class="text-sm font-normal cursor-pointer">
+                                        I confirm that this information is accurate and I have personally visited this
+                                        place
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button type="submit" :disabled="isSubmitting"
+                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 flex-1"
+                                    :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }">
+                                    <span x-show="!isSubmitting">Submit Gem</span>
+                                    <span x-show="isSubmitting" x-cloak>Submitting...</span>
+                                </button>
+                                <a href="gems.html"
+                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8 sm:w-auto w-full">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4"> <a href="index.html" class="flex items-center gap-2"><svg width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary h-6 w-6">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg><span class="text-xl font-serif font-semibold">Baliescape</span></a>
+                    <p class="text-sm text-muted-foreground">Your curated guide to Bali's hidden soul.
+                        Discover authentic experiences beyond the tourist trail.</p>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All
+                                Gems</a></li>
+                        <li><a href="accommodation.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a>
+                        </li>
+                        <li><a href="vehicles.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Vehicle
+                                Rental</a></li>
+                        <li><a href="guides.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Essential
+                                Guides</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">About
+                                Us</a></li>
+                        <li><a href="contact.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Contact</a>
+                        </li>
+                        <li><a href="submit.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Submit a
+                                Gem</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-sm text-muted-foreground mb-4">Get the latest gems delivered to your
+                        inbox.</p>
+                    <div class="flex gap-2"><input type="email" placeholder="Your email"
+                            class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" /><button
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+                <div class="flex items-center gap-4"><a href="https://instagram.com" target="_blank"
+                        rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-colors"
+                        aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg></a><a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S.2 5.3 7.8 4.5c2.1-.1 3.2.4 3.2.4l2.1-3.2 3 3.2S15.5 1.5 22 4z" />
+                        </svg></a></div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Baliescape</title>
+
+    <link href="output.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .navbar-transition {
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+
+
+    <script src="js/vendor/alpine.js"></script>
+</head>
+
+<body class="min-h-screen flex flex-col font-sans antialiased bg-background text-foreground">
+
+
+    <div x-data="{ isMobileMenuOpen: false, isScrolled: window.scrollY > 50 }"
+        x-init="window.addEventListener('scroll', () => { isScrolled = window.scrollY > 50 })"
+        class="sticky top-0 z-50">
+        <header
+            :class="isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border' : 'bg-background shadow-none border-transparent'"
+            class="border-b navbar-transition">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <a href="index.html" class="flex items-center gap-2 group">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                    </a>
+                    <div class="hidden md:flex items-center gap-6 lg:gap-8">
+                        <a href="index.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Home</a>
+                        <a href="gems.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Explore
+                            Gems</a>
+                        <a href="accommodation.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Accommodation</a>
+                        <a href="vehicles.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Vehicle
+                            Rental</a>
+                        <a href="guides.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Essential
+                            Guides</a>
+
+                        <a href="submit.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Share
+                            Your Gem</a>
+                    </div>
+                    <button class="md:hidden p-2" @click="isMobileMenuOpen = !isMobileMenuOpen"
+                        aria-label="Toggle menu">
+                        <svg x-show="!isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                        <svg x-show="isMobileMenuOpen" x-cloak class="w-6 h-6 text-foreground" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div x-show="isMobileMenuOpen" x-cloak x-transition
+                class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg"
+                @click.outside="isMobileMenuOpen = false">
+                <div class="flex flex-col gap-4 p-4">
+                    <a href="index.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Home</a>
+                    <a href="gems.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" @click="isMobileMenuOpen = false"
+                        class="block text-sm font-medium text-muted-foreground hover:text-primary">Essential Guides</a>
+
+                    <a href="submit.html" @click="isMobileMenuOpen = false"
+                        class="mt-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full">Share
+                        Your Gem</a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+
+    <main class="flex-1 py-16 px-4">
+        <div class="container mx-auto max-w-4xl">
+
+
+            <div class="text-center mb-12 md:mb-16">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-6 h-6 text-primary">
+                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-serif font-semibold mb-4 text-foreground">
+                    Get In Touch
+                </h1>
+                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Have questions, suggestions, or just want to say hello? We'd love to hear from you.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <h3 class="text-2xl font-serif font-semibold leading-none tracking-tight">Send Us a Message</h3>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <form x-data="{ isSubmitting: false, showSuccessMessage: false, showErrorMessage: false }"
+                            @submit.prevent="
+                                      showErrorMessage = false;
+                                      showSuccessMessage = false;
+                                      isSubmitting = true;
+                                      
+                                      const formData = new FormData($event.target);
+                                      const data = Object.fromEntries(formData.entries());
+
+                                      fetch('/api/messages', {
+                                          method: 'POST',
+                                          headers: { 'Content-Type': 'application/json' },
+                                          body: JSON.stringify(data)
+                                      })
+                                      .then(response => {
+                                          if (response.ok) {
+                                              showSuccessMessage = true;
+                                              $event.target.reset();
+                                          } else {
+                                              showErrorMessage = true;
+                                          }
+                                      })
+                                      .catch(() => {
+                                          showErrorMessage = true;
+                                      })
+                                      .finally(() => {
+                                          isSubmitting = false;
+                                      });
+                                  " class="space-y-6">
+
+                            <div x-show="showSuccessMessage" x-cloak x-transition
+                                class="relative w-full rounded-lg border bg-green-50 border-green-200 p-4 text-green-800"
+                                role="alert">
+                                <h5 class="mb-1 font-medium leading-none tracking-tight">Message Sent!</h5>
+                                <div class="text-sm">Thank you for contacting us. We'll get back to you soon.</div>
+                                <button type="button" @click="showSuccessMessage = false"
+                                    class="absolute top-2 right-2 p-1 font-bold">X</button>
+                            </div>
+
+                            <div x-show="showErrorMessage" x-cloak x-transition
+                                class="relative w-full rounded-lg border bg-red-50 border-red-200 p-4 text-red-800"
+                                role="alert">
+                                <h5 class="mb-1 font-medium leading-none tracking-tight">Error</h5>
+                                <div class="text-sm">Something went wrong. Please try again later.</div>
+                                <button type="button" @click="showErrorMessage = false"
+                                    class="absolute top-2 right-2 p-1 font-bold">X</button>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="name"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Name
+                                    *</label>
+                                <input id="name" name="name" placeholder="Your Name" required maxlength="100"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="email"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email
+                                    *</label>
+                                <input id="email" name="email" type="email" placeholder="your@email.com" required
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="subject"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Subject
+                                    *</label>
+                                <input id="subject" name="subject" placeholder="How can we help?" required
+                                    maxlength="200"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="message"
+                                    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Message
+                                    *</label>
+                                <textarea id="message" name="message" placeholder="Tell us more..." required rows="6"
+                                    maxlength="2000"
+                                    class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"></textarea>
+                            </div>
+
+                            <button type="submit" :disabled="isSubmitting"
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 w-full"
+                                :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }">
+                                <span x-show="!isSubmitting">Send Message</span>
+                                <span x-show="isSubmitting" x-cloak>Sending...</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-serif font-semibold mb-3 text-foreground">Contact Information</h3>
+                        <p class="text-muted-foreground mb-4">
+                            You can also reach us through the following channels:
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="w-5 h-5 text-primary">
+                                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                </svg>
+                                <a href="mailto:hello@baliescape.com"
+                                    class="text-muted-foreground hover:text-primary transition-colors">hello@baliescape.com</a>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="w-5 h-5 text-primary">
+                                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                                </svg>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                                    class="text-muted-foreground hover:text-primary transition-colors">@baliescape
+                                    (Instagram)</a>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="w-5 h-5 text-primary">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                                </svg>
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                                    class="text-muted-foreground hover:text-primary transition-colors">Baliescape
+                                    (Facebook)</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-serif font-semibold mb-3 text-foreground">Collaborations</h3>
+                        <p class="text-muted-foreground leading-relaxed">
+                            Interested in collaborating with Baliescape? We're open to partnerships that align with our
+                            mission of promoting authentic and sustainable travel in Bali. Reach out to us via email.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-serif font-semibold mb-3 text-foreground">Submit a Gem</h3>
+                        <p class="text-muted-foreground leading-relaxed mb-4">
+                            Found a hidden gem you think we should feature? We rely on community contributions!
+                        </p>
+                        <a href="submit.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium border border-primary text-primary bg-transparent hover:bg-primary/10 h-10 px-6">
+                            Share Your Gem Here
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+
+                <div class="space-y-4">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary h-6 w-6">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-xl font-serif font-semibold">Baliescape</span>
+                    </a>
+                    <p class="text-sm text-muted-foreground">
+                        Your curated guide to Bali's hidden soul. Discover authentic experiences beyond the tourist
+                        trail.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All
+                                Gems</a></li>
+                        <li><a href="accommodation.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a>
+                        </li>
+                        <li><a href="vehicles.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Vehicle Rental</a>
+                        </li>
+                        <li><a href="guides.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Essential Guides</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="text-primary hover:text-primary transition-colors">Contact</a>
+                        </li>
+                        <li><a href="submit.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Submit a Gem</a></li>
+                    </ul>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-sm text-muted-foreground mb-4">
+                        Get the latest gems delivered to your inbox.
+                    </p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Your email"
+                            class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+                        <button
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                        </svg></a>
+                    <a href="mailto:hello@baliescape.com"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

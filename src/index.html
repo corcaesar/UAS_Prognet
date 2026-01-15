@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baliescape - Your Guide to Bali's Hidden Soul</title>
+
+    <link href="output.css" rel="stylesheet">
+    <script src="js/vendor/alpine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Konfigurasi Tailwind -->
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .navbar-transition {
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col font-sans antialiased bg-background text-foreground">
+
+    <div x-data="{ isOpen: false, isScrolled: window.scrollY > 50, user: JSON.parse(localStorage.getItem('user')) || null, logout() { localStorage.removeItem('user'); window.location.href = 'index.html'; } }"
+        x-init="window.addEventListener('scroll', () => { isScrolled = window.scrollY > 50 })"
+        class="sticky top-0 z-50">
+        <header
+            :class="isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border' : 'bg-background shadow-none border-transparent'"
+            class="border-b navbar-transition">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <a href="index.html" class="flex items-center gap-2 group">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary transition-transform group-hover:scale-110 h-7 w-7">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M7 4.5L17 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M17 14.5L7 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-2xl font-serif font-semibold text-foreground">Baliescape</span>
+                    </a>
+                    <nav class="hidden md:flex items-center gap-6 lg:gap-8">
+                        <a href="index.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Home</a>
+                        <a href="gems.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Explore
+                            Gems</a>
+                        <a href="accommodation.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Accommodation</a>
+                        <a href="vehicles.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Vehicle
+                            Rental</a>
+                        <a href="guides.html"
+                            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Essential
+                            Guides</a>
+
+                        <template x-if="!user">
+                            <div class="flex items-center gap-4">
+                                <a href="login.html"
+                                    class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Login</a>
+                                <a href="register.html"
+                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Register</a>
+                            </div>
+                        </template>
+
+                        <template x-if="user">
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" @click.outside="open = false"
+                                    class="flex items-center gap-2 focus:outline-none">
+                                    <img :src="user.profilePicture || 'https://ui-avatars.com/api/?name=' + user.username"
+                                        alt="Profile" class="w-8 h-8 rounded-full object-cover border border-border">
+                                    <span x-text="user.username" class="text-sm font-medium text-foreground"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="text-muted-foreground transition-transform"
+                                        :class="open ? 'rotate-180' : ''">
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                                <div x-show="open" x-transition
+                                    class="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-50">
+                                    <a href="profile.html"
+                                        class="block px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground">My
+                                        Profile</a>
+                                    <button @click="logout()"
+                                        class="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10">Logout</button>
+                                </div>
+                            </div>
+                        </template>
+                    </nav>
+
+                    <button class="md:hidden p-2" @click="isOpen = !isOpen" aria-label="Toggle menu">
+                        <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground">
+                            <line x1="4" x2="20" y1="12" y2="12" />
+                            <line x1="4" x2="20" y1="6" y2="6" />
+                            <line x1="4" x2="20" y1="18" y2="18" />
+                        </svg>
+                        <svg x-show="isOpen" x-cloak xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-foreground">
+                            <line x1="18" x2="6" y1="6" y2="18" />
+                            <line x1="6" x2="18" y1="6" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div x-show="isOpen" x-cloak @click.outside="isOpen = false"
+                class="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg py-4">
+                <div class="flex flex-col gap-4 px-4">
+                    <a href="index.html" class="text-primary hover:text-primary">Home</a>
+                    <a href="gems.html" class="text-muted-foreground hover:text-primary">Explore Gems</a>
+                    <a href="accommodation.html" class="text-muted-foreground hover:text-primary">Accommodation</a>
+                    <a href="vehicles.html" class="text-muted-foreground hover:text-primary">Vehicle Rental</a>
+                    <a href="guides.html" class="text-muted-foreground hover:text-primary">Essential Guides</a>
+
+                    <template x-if="!user">
+                        <div class="flex flex-col gap-2 mt-2">
+                            <a href="login.html" class="text-center text-muted-foreground hover:text-primary">Login</a>
+                            <a href="register.html"
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 w-full">
+                                Register
+                            </a>
+                        </div>
+                    </template>
+                    <template x-if="user">
+                        <div class="border-t border-border pt-4 mt-2">
+                            <div class="flex items-center gap-3 mb-3">
+                                <img :src="user.profilePicture || 'https://ui-avatars.com/api/?name=' + user.username"
+                                    alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                                <span x-text="user.username" class="font-medium"></span>
+                            </div>
+                            <a href="profile.html" class="block py-2 text-sm hover:text-primary">My Profile</a>
+                            <button @click="logout()"
+                                class="block w-full text-left py-2 text-sm text-destructive">Logout</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main class="flex-1">
+
+        <section
+            class="relative bg-[url('img/background.jpg')] bg-cover bg-center h-[60vh] md:h-[calc(90vh-5rem)] rounded-bl-[150px] md:rounded-bl-[250px] overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20"></div>
+            <div
+                class="container mx-auto px-4 h-full flex flex-col justify-center items-center md:items-start text-center md:text-left relative z-10">
+                <div class="max-w-3xl md:ml-12">
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-serif font-bold text-white leading-tight">
+                        Let's Explore Bali
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/90 mt-4 max-w-2xl">
+                        Your curated guide to Bali's hidden soul. Discover authentic experiences beyond the tourist
+                        trail.
+                    </p>
+                    <a href="gems.html"
+                        class="mt-8 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-11 px-8 bg-primary text-primary-foreground hover:bg-primary/90">
+                        Explore All Gems
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-background">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-serif font-semibold text-foreground mb-4">
+                        Discover By Category
+                    </h2>
+                    <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Explore Bali through curated experiences, from hidden culinary treasures to secret natural
+                        wonders.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                    <a href="gems.html?category=culinary" class="block">
+                        <div
+                            class="overflow-hidden group rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-all duration-300 h-full">
+                            <div class="relative aspect-[4/3] overflow-hidden">
+                                <img src="img/kuliner.jpg" alt="Culinary Delights"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                <span
+                                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-orange-100 text-orange-800 absolute top-3 left-3">
+                                    Culinary
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-serif font-semibold mb-2">Culinary Delights</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">Authentic warungs, hidden cafes,
+                                    and must-try Balinese dishes.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="gems.html?category=spot" class="block">
+                        <div
+                            class="overflow-hidden group rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-all duration-300 h-full">
+                            <div class="relative aspect-[4/3] overflow-hidden">
+                                <img src="img/spot.jpg" alt="Hidden Spots"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                <span
+                                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 absolute top-3 left-3">
+                                    Spot
+                                </span>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h3 class="font-serif font-semibold text-lg group-hover:text-primary transition-colors">
+                                    Hidden Spots</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">Secret beaches, quiet viewpoints,
+                                    and stunning natural landscapes.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="gems.html?category=attraction" class="block">
+                        <div
+                            class="overflow-hidden group rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-all duration-300 h-full">
+                            <div class="relative aspect-[4/3] overflow-hidden">
+                                <img src="img/atraksi.jpg" alt="Attractions"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 bg-purple-100" />
+                                <span
+                                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-purple-100 text-purple-800 absolute top-3 left-3">
+                                    Attraction
+                                </span>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h3 class="font-serif font-semibold text-lg group-hover:text-primary transition-colors">
+                                    Cultural Attractions</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">Unique temples, local craft
+                                    markets, and immersive cultural activities.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="guides.html" class="block">
+                        <div
+                            class="overflow-hidden group rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-all duration-300 h-full">
+                            <div class="relative aspect-[4/3] overflow-hidden">
+                                <img src="img/guide.jpg" alt="Essential Guides"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 bg-green-100" />
+                                <span
+                                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800 absolute top-3 left-3">
+                                    Guides
+                                </span>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h3 class="font-serif font-semibold text-lg group-hover:text-primary transition-colors">
+                                    Essential Guides</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">Insider tips, cultural etiquette,
+                                    and practical advice for your trip.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-secondary/50">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 max-w-6xl mx-auto">
+
+                    <img src="img/1background.jpg" alt="About Baliescape"
+                        class="w-full md:w-1/2 rounded-lg shadow-md object-cover aspect-[4/3] bg-accent" />
+                    <div class="text-center md:text-left md:w-1/2">
+                        <h3 class="text-4xl md:text-5xl font-serif font-semibold text-foreground mb-5">About Baliescape
+                        </h3>
+                        <p class="text-muted-foreground mb-6 text-lg leading-relaxed">
+                            Baliescape isn't just another travel guide. We are a community of locals and passionate
+                            travelers dedicated to uncovering the authentic, hidden soul of Bali.
+                        </p>
+                        <p class="text-muted-foreground leading-relaxed mb-8">
+                            Our mission is to guide you away from the crowds and into the heart of the island,
+                            showcasing secret spots, family-run warungs, and genuine cultural experiences that
+                            mainstream tourism often misses.
+                        </p>
+                        <a href="about.html"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-6 bg-primary text-primary-foreground hover:bg-primary/90">
+                            Learn More About Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-secondary/50 border-t border-border mt-auto">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <a href="index.html" class="flex items-center gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-primary h-6 w-6">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <span class="text-xl font-serif font-semibold">Baliescape</span>
+                    </a>
+                    <p class="text-sm text-muted-foreground">
+                        Your curated guide to Bali's hidden soul. Discover authentic experiences beyond the tourist
+                        trail.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Explore</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="gems.html" class="text-muted-foreground hover:text-primary transition-colors">All
+                                Gems</a></li>
+                        <li><a href="accommodation.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Accommodation</a>
+                        </li>
+                        <li><a href="vehicles.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Vehicle Rental</a>
+                        </li>
+                        <li><a href="guides.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Essential Guides</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="contact.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+                        <li><a href="submit.html"
+                                class="text-muted-foreground hover:text-primary transition-colors">Submit a Gem</a></li>
+                    </ul>
+                </div>
+
+
+                <div>
+                    <h3 class="font-serif font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-sm text-muted-foreground mb-4">
+                        Get the latest gems delivered to your inbox.
+                    </p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Your email"
+                            class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" />
+                        <button
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-muted-foreground">© 2025 Baliescape. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                        </svg></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                        </svg></a>
+                    <a href="mailto:hello@baliescape.com"
+                        class="text-muted-foreground hover:text-primary transition-colors" aria-label="Email"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="w-5 h-5">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
